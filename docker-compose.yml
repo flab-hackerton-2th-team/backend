@@ -10,6 +10,8 @@ services:
       - '3000:3000'
     depends_on:
       - postgres
+    networks:
+      - backend
 
   postgres:
     image: postgres
@@ -21,3 +23,9 @@ services:
       POSTGRES_PASSWORD: local
     volumes:
       - ./data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
