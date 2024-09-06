@@ -1,0 +1,23 @@
+ARG NODE_VERSION="18.20.4"
+ARG ALPINE_VERSION="3.19"
+
+# base
+FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} as base
+
+WORKDIR /app
+
+RUN apk update
+RUN corepack enable
+
+# dev
+FROM base as runner
+
+WORKDIR /app
+
+COPY . .
+
+RUN pnpm install
+
+RUN pnpm run build
+
+RUN pnpm run start
