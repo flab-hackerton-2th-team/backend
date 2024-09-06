@@ -1,10 +1,10 @@
 import { Entity, Property, ManyToOne, PrimaryKey } from '@mikro-orm/core';
 
 @Entity()
-export class Interviewer {
+export class Reviewer {
   @PrimaryKey()
   id: bigint;
 
-  @Property({ length: 20 })
-  name: string;
+  @Property({ type: 'jsonb' })
+  presona: any;
 }
