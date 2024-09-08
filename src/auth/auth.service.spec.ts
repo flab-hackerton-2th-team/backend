@@ -1,17 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { getRepositoryToken, MikroOrmModule } from '@mikro-orm/nestjs';
 import { Interviewer } from '../entities/interviewer';
 import { CreateInterviewerDTO } from './dto/createInterviewer.dto';
 import { plainToInstance } from 'class-transformer';
 import { testConfig } from '../mikro-orm.config';
+import { InterviewerDTO } from './dto/Interviewer.dto';
 
 describe('AuthService', () => {
   let service: AuthService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [MikroOrmModule.forRoot(testConfig)],
+      imports: [
+        MikroOrmModule.forRoot(testConfig),
+        MikroOrmModule.forFeature([Interviewer]),
+      ],
       providers: [AuthService],
     }).compile();
 
@@ -28,6 +32,7 @@ describe('AuthService', () => {
 
     const interviewer = await service.createInterviewer(createDTO);
 
-    expect(interviewer).toBeInstanceOf(Interviewer);
+    expect(interviewer).toBeInstanceOf(InterviewerDTO);
+    expect(interviewer.name).toEqual(name);
   });
 });
