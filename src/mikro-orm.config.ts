@@ -22,3 +22,8 @@ const config: Options = {
 };
 
 export default defineConfig(config);
+
+export const testConfig: Options = defineConfig({
+  ...config,
+  dbName: ':memory:',
+});
