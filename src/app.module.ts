@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AuthModule } from './auth/auth.module';
 import mikroOrmConfig, { testConfig } from './mikro-orm.config';
+import { ReviwersModule } from './reviwers/reviwers.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import mikroOrmConfig, { testConfig } from './mikro-orm.config';
       process.env.NODE_ENV === 'test' ? testConfig : mikroOrmConfig,
     ),
     AuthModule,
+    ReviwersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
