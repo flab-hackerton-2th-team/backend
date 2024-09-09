@@ -1,34 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ReviwersService } from './reviwers.service';
+import { ReviewersService } from '../reviewers.service';
 import { MikroOrmModule, getRepositoryToken } from '@mikro-orm/nestjs';
-import { testConfig } from '../mikro-orm.config';
-import { Reviewer } from '../entities/reviewer';
+import { testConfig } from '../../mikro-orm.config';
+import { Reviewer } from '../../entities/reviewer';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { MikroORM } from '@mikro-orm/sqlite';
+import { REVIEWER_LIST } from './reviewers.common';
 
 describe('ReviwersService', () => {
-  const REVIEWER_LIST: Partial<Reviewer>[] = [
-    {
-      presona: {
-        name: 'John Doe',
-        image:
-          'https://images.freeimages.com/images/large-previews/83f/paris-1213603.jpg?fmt=webp&w=500',
-        description: 'hello world',
-        prompt: 'hello Missing',
-      },
-    },
-    {
-      presona: {
-        name: 'James Doe',
-        image:
-          'https://images.freeimages.com/images/large-previews/03e/oxford-architecture-1233371.jpg?fmt=webp&w=500',
-        description: 'hello world2',
-        prompt: 'hello Missing2',
-      },
-    },
-  ];
-
-  let service: ReviwersService;
+  let service: ReviewersService;
   let reviewerRepository: EntityRepository<Reviewer>;
   let orm: MikroORM;
 
@@ -38,10 +18,10 @@ describe('ReviwersService', () => {
         MikroOrmModule.forRoot(testConfig),
         MikroOrmModule.forFeature([Reviewer]),
       ],
-      providers: [ReviwersService],
+      providers: [ReviewersService],
     }).compile();
 
-    service = module.get<ReviwersService>(ReviwersService);
+    service = module.get<ReviewersService>(ReviewersService);
     reviewerRepository = module.get<EntityRepository<Reviewer>>(
       getRepositoryToken(Reviewer),
     );

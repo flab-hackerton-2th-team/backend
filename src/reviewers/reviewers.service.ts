@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Reviewer } from '../entities/reviewer';
 
 @Injectable()
-export class ReviwersService {
+export class ReviewersService {
   constructor(
     @InjectRepository(Reviewer)
     private readonly reviewerRepository: EntityRepository<Reviewer>,
