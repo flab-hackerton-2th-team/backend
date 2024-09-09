@@ -1,8 +1,9 @@
 import { EntityGenerator } from '@mikro-orm/entity-generator';
 import { Migrator } from '@mikro-orm/migrations';
-import { defineConfig, Options } from '@mikro-orm/postgresql';
+import { MikroOrmModuleOptions } from '@mikro-orm/nestjs';
+import { defineConfig, Options, PostgreSqlDriver } from '@mikro-orm/postgresql';
 
-const config: Options = {
+const config: MikroOrmModuleOptions<PostgreSqlDriver> = {
   entities: ['./dist/entities'], // Path to your compiled JS entities
   entitiesTs: ['./src/entities'], // Path to your TypeScript entities
   dbName: 'testdb',
@@ -23,7 +24,7 @@ const config: Options = {
 
 export default defineConfig(config);
 
-export const testConfig: Options = defineConfig({
+export const testConfig = defineConfig({
   ...config,
   allowGlobalContext: true,
   dbName: ':memory:',
