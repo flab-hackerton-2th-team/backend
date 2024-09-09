@@ -3,10 +3,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AuthModule } from './auth/auth.module';
-import mikroOrmConfig from './mikro-orm.config';
+import mikroOrmConfig, { testConfig } from './mikro-orm.config';
 
 @Module({
-  imports: [MikroOrmModule.forRoot(mikroOrmConfig), AuthModule],
+  imports: [
+    MikroOrmModule.forRoot(
+      process.env.NODE_ENV === 'test' ? testConfig : mikroOrmConfig,
+    ),
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
