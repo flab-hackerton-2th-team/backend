@@ -28,6 +28,10 @@ export class InterviewController {
     return this.interviewService.create(createDTO);
   }
 
+  @ApiResponse({
+    type: InterviewContentDTO,
+    isArray: true,
+  })
   @Get('/:id/contents')
   findContents(@Param('id') interviewId: bigint) {
     return this.interviewService.findContents(interviewId);
