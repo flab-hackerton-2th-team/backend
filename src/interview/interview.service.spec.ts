@@ -5,34 +5,68 @@ import { Reviewer } from '../entities/reviewer';
 import { testConfig } from '../mikro-orm.config';
 import { Interview } from '../entities/interview';
 import { EntityRepository, MikroORM } from '@mikro-orm/sqlite';
+import { plainToInstance } from 'class-transformer';
+import { Interviewer } from '../entities/interviewer';
+import { REVIEWER_LIST } from '../../test/fixture/reviewers.common';
+import { INTERVIEWER_LIST } from '../../test/fixture/interviewer.common';
+import { CreateInterviewDTO } from './dto/createInterview.dto';
 
 describe('InterviewService', () => {
   let service: InterviewService;
   let reviewerRepository: EntityRepository<Reviewer>;
+  let interviewerRepository: EntityRepository<Interviewer>;
   let orm: MikroORM;
+
+  let reviewerList: Reviewer[];
+  let interviewerList: Interviewer[];
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         MikroOrmModule.forRoot(testConfig),
-        MikroOrmModule.forFeature([Reviewer]),
+        MikroOrmModule.forFeature([Reviewer, Interviewer]),
       ],
       providers: [InterviewService],
     }).compile();
 
+    orm = module.get(MikroORM);
     service = module.get<InterviewService>(InterviewService);
     reviewerRepository = module.get<EntityRepository<Reviewer>>(
       getRepositoryToken(Reviewer),
     );
-    orm = module.get(MikroORM);
+    interviewerRepository = module.get<EntityRepository<Interviewer>>(
+      getRepositoryToken(Interviewer),
+    );
   });
 
   beforeEach(async () => {
     await orm.getSchemaGenerator().dropSchema();
     await orm.getSchemaGenerator().createSchema();
+
+    reviewerList = await Promise.all(
+      REVIEWER_LIST.map((reviewer) => reviewerRepository.create(reviewer)),
+    );
+
+    interviewerList = await Promise.all(
+      INTERVIEWER_LIST.map((interviewer) =>
+        interviewerRepository.create(interviewer),
+      ),
+    );
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('interviewer 생성', async () => {
+    const createDTO = plainToInstance(CreateInterviewDTO, {
+      reviwerId: reviewerList[0].id,
+      interviewerId: interviewerList[0].id,
+    });
+    const response = await service.create(createDTO);
+
+    expect(response).toBeInstanceOf(Interview);
+    expect(response.interviewerId).toBe(interviewerList[0].id);
+    expect(response.reviewerId).toBe(reviewerList[0].id);
   });
 });
