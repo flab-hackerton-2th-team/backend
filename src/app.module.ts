@@ -7,6 +7,10 @@ import mikroOrmConfig, { testConfig } from './mikro-orm.config';
 import { ReviewersModule } from './reviewers/reviewers.module';
 import { InterviewModule } from './interview/interview.module';
 
+BigInt.prototype['toJSON'] = function () {
+  return this.toString();
+};
+
 @Module({
   imports: [
     MikroOrmModule.forRoot(
