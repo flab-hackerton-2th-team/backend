@@ -100,6 +100,12 @@ describe('InterviewService', () => {
   });
 
   describe('interview 조회', () => {
+    it('0개일 경우 빈 array 조회', async () => {
+      const response = await service.findAll();
+
+      expect(response.length).toBe(0);
+    });
+
     it('1개일 경우 조회 가능', async () => {
       const interview = await service.create(
         CreateInterviewDTO.from({
