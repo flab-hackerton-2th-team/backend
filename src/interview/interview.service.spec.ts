@@ -4,7 +4,7 @@ import { getRepositoryToken, MikroOrmModule } from '@mikro-orm/nestjs';
 import { Reviewer } from '../entities/reviewer';
 import { testConfig } from '../mikro-orm.config';
 import { Interview } from '../entities/interview';
-import { EntityRepository, MikroORM } from '@mikro-orm/sqlite';
+import { EntityRepository, MikroORM, NotFoundError } from '@mikro-orm/sqlite';
 import { plainToInstance } from 'class-transformer';
 import { Interviewer } from '../entities/interviewer';
 import { REVIEWER_LIST } from '../../test/fixture/reviewers.common';
@@ -37,12 +37,6 @@ describe('InterviewService', () => {
     interviewerRepository = module.get<EntityRepository<Interviewer>>(
       getRepositoryToken(Interviewer),
     );
-  });
-
-  beforeEach(async () => {
-    await orm.getSchemaGenerator().dropSchema();
-    await orm.getSchemaGenerator().createSchema();
-
     await Promise.all(
       REVIEWER_LIST.map((reviewer) => reviewerRepository.create(reviewer)),
     );
@@ -62,16 +56,29 @@ describe('InterviewService', () => {
     expect(service).toBeDefined();
   });
 
-  it('interviewer 생성', async () => {
-    const createDTO = plainToInstance(CreateInterviewDTO, {
-      reviewerId: reviewerList[0].id,
-      interviewerId: interviewerList[0].id,
+  describe('interviewer 생성', () => {
+    it('정상 요청에 대해서 생성', async () => {
+      const createDTO = plainToInstance(CreateInterviewDTO, {
+        reviewerId: reviewerList[0].id,
+        interviewerId: interviewerList[0].id,
+      });
+
+      const response = await service.create(createDTO);
+
+      expect(response).toBeInstanceOf(Interview);
+      expect(response.interviewer.id).toBe(interviewerList[0].id);
+      expect(response.reviewer.id).toBe(reviewerList[0].id);
     });
 
-    const response = await service.create(createDTO);
+    it('reviewerId가 유효하지 않으면 에러 발생', async () => {
+      const createDTO = plainToInstance(CreateInterviewDTO, {
+        reviewerId: null,
+        interviewerId: interviewerList[0].id,
+      });
 
-    expect(response).toBeInstanceOf(Interview);
-    expect(response.interviewer.id).toBe(interviewerList[0].id);
-    expect(response.reviewer.id).toBe(reviewerList[0].id);
+      await expect(async () => await service.create(createDTO)).rejects.toThrow(
+        NotFoundError,
+      );
+    });
   });
 });
