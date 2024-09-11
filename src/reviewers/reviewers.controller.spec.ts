@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ReviewersController } from '../reviewers.controller';
-import { ReviewersService } from '../reviewers.service';
+import { ReviewersController } from './reviewers.controller';
+import { ReviewersService } from './reviewers.service';
 import { getRepositoryToken, MikroOrmModule } from '@mikro-orm/nestjs';
-import { Reviewer } from '../../entities/reviewer';
-import { testConfig } from '../../mikro-orm.config';
-import { REVIEWER_LIST } from './reviewers.common';
+import { Reviewer } from '../entities/reviewer';
+import { testConfig } from '../mikro-orm.config';
+import { REVIEWER_LIST } from '../../test/fixture/reviewers.common';
 import { EntityRepository } from '@mikro-orm/core';
 import { MikroORM } from '@mikro-orm/sqlite';
 

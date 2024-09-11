@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ReviewersService } from '../reviewers.service';
+import { ReviewersService } from './reviewers.service';
 import { MikroOrmModule, getRepositoryToken } from '@mikro-orm/nestjs';
-import { testConfig } from '../../mikro-orm.config';
-import { Reviewer } from '../../entities/reviewer';
+import { testConfig } from '../mikro-orm.config';
+import { Reviewer } from '../entities/reviewer';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { MikroORM } from '@mikro-orm/sqlite';
-import { REVIEWER_LIST } from './reviewers.common';
+import { REVIEWER_LIST } from '../../test/fixture/reviewers.common';
 
 describe('ReviwersService', () => {
   let service: ReviewersService;

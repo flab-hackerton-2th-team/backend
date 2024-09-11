@@ -5,7 +5,7 @@ import { AppModule } from './../src/app.module';
 import { EntityRepository } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { Reviewer } from '../src/entities/reviewer';
-import { REVIEWER_LIST } from '../src/reviewers/test/reviewers.common';
+import { REVIEWER_LIST } from './fixture/reviewers.common';
 import { MikroORM } from '@mikro-orm/sqlite';
 
 describe('ReviewerController (e2e)', () => {
