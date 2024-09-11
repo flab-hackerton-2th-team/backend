@@ -37,6 +37,10 @@ describe('InterviewService', () => {
     interviewerRepository = module.get<EntityRepository<Interviewer>>(
       getRepositoryToken(Interviewer),
     );
+
+    await orm.getSchemaGenerator().dropSchema();
+    await orm.getSchemaGenerator().createSchema();
+
     await Promise.all(
       REVIEWER_LIST.map((reviewer) => reviewerRepository.create(reviewer)),
     );
@@ -74,6 +78,17 @@ describe('InterviewService', () => {
       const createDTO = plainToInstance(CreateInterviewDTO, {
         reviewerId: null,
         interviewerId: interviewerList[0].id,
+      });
+
+      await expect(async () => await service.create(createDTO)).rejects.toThrow(
+        NotFoundError,
+      );
+    });
+
+    it('', async () => {
+      const createDTO = plainToInstance(CreateInterviewDTO, {
+        reviewerId: reviewerList[0].id,
+        interviewerId: null,
       });
 
       await expect(async () => await service.create(createDTO)).rejects.toThrow(
