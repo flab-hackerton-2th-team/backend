@@ -12,6 +12,7 @@ import { REVIEWER_LIST } from '../../test/fixture/reviewers.common';
 import { plainToInstance } from 'class-transformer';
 import { CreateInterviewDTO } from './dto/createInterview.dto';
 import { InterviewContents } from '../entities/interviewContents';
+import { CreateInterviewContentDTO } from './dto/createInterviewContent.dto';
 
 describe('InterviewController', () => {
   let controller: InterviewController;
@@ -87,5 +88,37 @@ describe('InterviewController', () => {
     const response = await controller.findAll();
 
     expect(response.length).toBe(0);
+  });
+
+  it('interview content 0개 조회', async () => {
+    const interview = await controller.create(
+      CreateInterviewDTO.from({
+        reviewerId: reviewerList[0].id,
+        interviewerId: interviewerList[0].id,
+      }),
+    );
+
+    const response = await controller.findContents(interview.id);
+
+    expect(response.length).toBe(0);
+  });
+
+  it('interview post', async () => {
+    const interview = await controller.create(
+      CreateInterviewDTO.from({
+        reviewerId: reviewerList[0].id,
+        interviewerId: interviewerList[0].id,
+      }),
+    );
+    const content = 'hello';
+
+    const response = await controller.createContent(
+      interview.id,
+      plainToInstance(CreateInterviewContentDTO, { content }),
+    );
+
+    expect(response.content.length).toBeGreaterThan(0);
+    expect(response.content).not.toBe(content);
+    expect(response.speaker).toBe('bot');
   });
 });
