@@ -11,6 +11,7 @@ import { REVIEWER_LIST } from '../../test/fixture/reviewers.common';
 import { INTERVIEWER_LIST } from '../../test/fixture/interviewer.common';
 import { CreateInterviewDTO } from './dto/createInterview.dto';
 import { InterviewContents } from '../entities/interviewContents';
+import { CreateInterviewContentDTO } from './dto/createInterviewContent.dto';
 
 describe('InterviewService', () => {
   let service: InterviewService;
@@ -147,6 +148,23 @@ describe('InterviewService', () => {
       expect(response.id).toBe(interview.id);
       expect(response.contents).toBeInstanceOf(Array);
       expect(response.contents.length).toBe(0);
+    });
+  });
+
+  describe('interview createContents', () => {
+    it('interview 단일 contents생성', async () => {
+      const interview = await createInterview();
+      const content = 'hello';
+
+      const response = await service.createContents(
+        interview.id,
+        plainToInstance(CreateInterviewContentDTO, {
+          content,
+        }),
+      );
+
+      expect(response.id).toBeDefined();
+      expect(response.content).toBe(content);
     });
   });
 

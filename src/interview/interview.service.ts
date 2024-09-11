@@ -9,6 +9,9 @@ import { InterviewDetailDTO } from './dto/interviewDetail.dto ';
 
 @Injectable()
 export class InterviewService {
+  createContents(id: bigint, arg1: any) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     @InjectRepository(Interview)
     private readonly interviewRepository: EntityRepository<Interview>,
