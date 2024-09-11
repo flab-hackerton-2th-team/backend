@@ -9,6 +9,8 @@ import { REVIEWER_LIST } from './fixture/reviewers.common';
 import { MikroORM } from '@mikro-orm/sqlite';
 import { Interviewer } from '../src/entities/interviewer';
 import { INTERVIEWER_LIST } from './fixture/interviewer.common';
+import { InterviewFixture } from './fixture/interview.common';
+import { CreateInterviewDTO } from '../src/interview/dto/createInterview.dto';
 
 describe('ReviewerController (e2e)', () => {
   let app: INestApplication;
@@ -18,6 +20,8 @@ describe('ReviewerController (e2e)', () => {
 
   let reviewerList: Reviewer[];
   let interviewerList: Interviewer[];
+
+  let interviewFixture: InterviewFixture;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -40,6 +44,8 @@ describe('ReviewerController (e2e)', () => {
     interviewerRepository = moduleFixture.get<EntityRepository<Interviewer>>(
       getRepositoryToken(Interviewer),
     );
+
+    interviewFixture = new InterviewFixture(app);
   });
 
   beforeEach(async () => {
@@ -61,16 +67,15 @@ describe('ReviewerController (e2e)', () => {
 
   describe('/interviewer (POST)', () => {
     it('interview 생성에 성공한다.', async () => {
-      const response = await request(app.getHttpServer())
-        .post('/interview')
-        .send({
+      const response = await interviewFixture.create(
+        CreateInterviewDTO.from({
           interviewerId: interviewerList[0].id,
           reviewerId: reviewerList[0].id,
-        })
-        .expect(201);
+        }),
+      );
 
-      expect(response.body.reviewer).toEqual(reviewerList[0].id.toString());
-      expect(response.body.interviewer).toEqual(
+      expect(response.body.reviewer.id).toEqual(reviewerList[0].id.toString());
+      expect(response.body.interviewer.id).toEqual(
         interviewerList[0].id.toString(),
       );
     });
@@ -78,17 +83,14 @@ describe('ReviewerController (e2e)', () => {
 
   describe('/interviewer (GET)', () => {
     it('interview 조회에 성공한다.', async () => {
-      await request(app.getHttpServer())
-        .post('/interview')
-        .send({
+      await interviewFixture.create(
+        CreateInterviewDTO.from({
           interviewerId: interviewerList[0].id,
           reviewerId: reviewerList[0].id,
-        })
-        .expect(201);
+        }),
+      );
 
-      const response = await request(app.getHttpServer())
-        .get('/interview')
-        .expect(200);
+      const response = await interviewFixture.getAll();
 
       expect(response.body.length).toEqual(1);
     });
