@@ -116,5 +116,32 @@ describe('ReviewerController (e2e)', () => {
       expect(response.status).toBe(201);
       expect(response.body.content).not.toEqual(content);
     });
+
+    it('GET: interviewContents 조회에 성공한다.', async () => {
+      const interview = await interviewFixture.create(
+        CreateInterviewDTO.from({
+          interviewerId: interviewerList[0].id,
+          reviewerId: reviewerList[0].id,
+        }),
+      );
+
+      const content = 'hello';
+      await Promise.all(
+        Array.from({ length: 2 }).map(() =>
+          interviewFixture.createContents(
+            interview.body.id,
+            plainToInstance(CreateInterviewContentDTO, {
+              content,
+            }),
+          ),
+        ),
+      );
+
+      const response = await interviewFixture.getAllContents(
+        interview.body.id,
+      );
+
+      expect(response.body.length).toEqual(4);
+    });
   });
 });

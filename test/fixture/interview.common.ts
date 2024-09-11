@@ -23,4 +23,10 @@ export class InterviewFixture {
   getAll() {
     return request(this.app.getHttpServer()).get('/interview').expect(200);
   }
+
+  getAllContents(id: any) {
+    return request(this.app.getHttpServer())
+      .get(`/interview/${id}/contents`)
+      .expect(200);
+  }
 }
