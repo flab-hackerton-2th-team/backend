@@ -15,6 +15,10 @@ export class AuthService {
   async createInterviewer(createDTO: CreateInterviewerDTO) {
     const interviewer = await this.interviewerRepository.create(createDTO);
 
+    await this.interviewerRepository
+      .getEntityManager()
+      .persistAndFlush(interviewer);
+
     return InterviewerDTO.fromEntity(interviewer);
   }
 }

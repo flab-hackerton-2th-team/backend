@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { InterviewService } from './interview.service';
 import { CreateInterviewDTO } from './dto/createInterview.dto';
 
@@ -9,5 +9,10 @@ export class InterviewController {
   @Post()
   create(@Body() createDTO: CreateInterviewDTO) {
     return this.interviewService.create(createDTO);
+  }
+
+  @Get()
+  findAll() {
+    return this.interviewService.findAll();
   }
 }

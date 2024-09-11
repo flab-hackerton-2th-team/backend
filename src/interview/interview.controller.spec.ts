@@ -76,4 +76,10 @@ describe('InterviewController', () => {
     expect(response.interviewer.id).toBe(interviewerList[0].id);
     expect(response.reviewer.id).toBe(reviewerList[0].id);
   });
+
+  it('interview 조회', async () => {
+    const response = await controller.findAll();
+
+    expect(response.length).toBe(1);
+  });
 });
