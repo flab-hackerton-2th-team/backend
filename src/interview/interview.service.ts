@@ -27,12 +27,18 @@ export class InterviewService {
       }),
     ]);
 
-    return this.interviewRepository.create({
+    const newEntity = this.interviewRepository.create({
       title: 'test',
       status: 'created',
       interviewer,
       reviewer,
     });
+
+    await this.interviewerRepository
+      .getEntityManager()
+      .persistAndFlush(newEntity);
+
+    return newEntity;
   }
 
   findAll() {
