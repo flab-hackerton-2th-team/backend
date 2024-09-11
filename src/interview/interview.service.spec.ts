@@ -99,7 +99,7 @@ describe('InterviewService', () => {
     });
   });
 
-  describe('interview 조회', () => {
+  describe('interview findAll', () => {
     it('0개일 경우 빈 array 조회', async () => {
       const response = await service.findAll();
 
@@ -139,6 +139,23 @@ describe('InterviewService', () => {
       const response = await service.findAll();
 
       expect(response.length).toBe(2);
+    });
+  });
+
+  describe('interview findOne', () => {
+    it('interview 관련된 contents 포함해서 조회', async () => {
+      const interview = await service.create(
+        CreateInterviewDTO.from({
+          reviewerId: reviewerList[0].id,
+          interviewerId: interviewerList[0].id,
+        }),
+      );
+
+      const response = await service.findOne(interview.id);
+
+      expect(response.id).toBe(interview.id);
+      expect(response.contents).toBeInstanceOf(Array);
+      expect(response.contents.length).toBe(0);
     });
   });
 });

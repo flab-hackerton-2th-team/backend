@@ -44,4 +44,8 @@ export class InterviewService {
   findAll() {
     return this.interviewRepository.findAll();
   }
+
+  findOne(id: bigint) {
+    throw new Error('Method not implemented.');
+  }
 }
