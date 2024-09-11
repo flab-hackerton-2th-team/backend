@@ -72,8 +72,10 @@ export class InterviewService {
     return InterviewContentDTO.fromEntity(responseEntity);
   }
 
-  findAll() {
-    return this.interviewRepository.findAll();
+  async findAll() {
+    const interviewes = await this.interviewRepository.findAll();
+
+    return interviewes.map(InterviewDTO.fromEntity);
   }
 
   async findOne(id: bigint) {

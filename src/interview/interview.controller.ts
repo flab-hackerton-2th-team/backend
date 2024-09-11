@@ -11,6 +11,10 @@ import { InterviewContentDTO } from './dto/interviewContent.dto';
 export class InterviewController {
   constructor(private readonly interviewService: InterviewService) {}
 
+  @ApiResponse({
+    type: InterviewDTO,
+    isArray: true,
+  })
   @Get()
   findAll() {
     return this.interviewService.findAll();
