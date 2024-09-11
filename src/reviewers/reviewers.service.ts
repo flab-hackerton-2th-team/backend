@@ -2,6 +2,7 @@ import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
 import { Reviewer } from '../entities/reviewer';
+import { ReviewerDTO } from './dto/reviwer.dto';
 
 @Injectable()
 export class ReviewersService {
@@ -10,7 +11,9 @@ export class ReviewersService {
     private readonly reviewerRepository: EntityRepository<Reviewer>,
   ) {}
 
-  getAll() {
-    return this.reviewerRepository.findAll();
+  async getAll() {
+    const reviewers = await this.reviewerRepository.findAll();
+
+    return reviewers.map(ReviewerDTO.fromEntity);
   }
 }
