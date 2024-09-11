@@ -1,8 +1,19 @@
+import { Exclude, Expose } from 'class-transformer';
 import { InterviewContents } from '../../entities/interviewContents';
+import { ApiProperty } from '@nestjs/swagger';
 
+@Exclude()
 export class InterviewContentDTO {
+  @Expose()
+  @ApiProperty()
   id: bigint;
+
+  @Expose()
+  @ApiProperty()
   speaker: string;
+
+  @Expose()
+  @ApiProperty()
   content: string;
 
   static fromEntity(entity: InterviewContents) {

@@ -4,11 +4,17 @@ import { CreateInterviewDTO } from './dto/createInterview.dto';
 import { CreateInterviewContentDTO } from './dto/createInterviewContent.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { InterviewDTO } from './dto/interview.dto';
+import { InterviewContentDTO } from './dto/interviewContent.dto';
 
 @ApiTags('interview')
 @Controller('interview')
 export class InterviewController {
   constructor(private readonly interviewService: InterviewService) {}
+
+  @Get()
+  findAll() {
+    return this.interviewService.findAll();
+  }
 
   @ApiResponse({
     type: InterviewDTO,
@@ -18,21 +24,22 @@ export class InterviewController {
     return this.interviewService.create(createDTO);
   }
 
+  @Get('/:id/contents')
+  findContents(@Param('id') interviewId: bigint) {
+    return this.interviewService.findContents(interviewId);
+  }
+
+  @ApiResponse({
+    type: InterviewContentDTO,
+    description: `
+    응답은 ai에 질의한 결과가 옵니다.
+    `,
+  })
   @Post('/:id/contents')
   createContent(
     @Param('id') interviewId: bigint,
     @Body() dto: CreateInterviewContentDTO,
   ) {
     return this.interviewService.createContents(interviewId, dto);
-  }
-
-  @Get()
-  findAll() {
-    return this.interviewService.findAll();
-  }
-
-  @Get('/:id/contents')
-  findContents(@Param('id') interviewId: bigint) {
-    return this.interviewService.findContents(interviewId);
   }
 }

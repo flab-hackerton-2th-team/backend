@@ -69,7 +69,7 @@ export class InterviewService {
       .getEntityManager()
       .persistAndFlush(responseEntity);
 
-    return responseEntity;
+    return InterviewContentDTO.fromEntity(responseEntity);
   }
 
   findAll() {
