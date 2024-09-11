@@ -1,12 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
-import { EntityRepository } from '@mikro-orm/core';
+import { EntityRepository, MikroORM } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { Reviewer } from '../src/entities/reviewer';
 import { REVIEWER_LIST } from './fixture/reviewers.common';
-import { MikroORM } from '@mikro-orm/sqlite';
 import { Interviewer } from '../src/entities/interviewer';
 import { INTERVIEWER_LIST } from './fixture/interviewer.common';
 import { InterviewFixture } from './fixture/interview.common';
@@ -38,8 +36,7 @@ describe('ReviewerController (e2e)', () => {
     );
 
     await app.init();
-
-    orm = moduleFixture.get(MikroORM);
+    orm = moduleFixture.get<MikroORM>(MikroORM);
     reviewerRepository = moduleFixture.get<EntityRepository<Reviewer>>(
       getRepositoryToken(Reviewer),
     );
@@ -137,9 +134,7 @@ describe('ReviewerController (e2e)', () => {
         ),
       );
 
-      const response = await interviewFixture.getAllContents(
-        interview.body.id,
-      );
+      const response = await interviewFixture.getAllContents(interview.body.id);
 
       expect(response.body.length).toEqual(4);
     });

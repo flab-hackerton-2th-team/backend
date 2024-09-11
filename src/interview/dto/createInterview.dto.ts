@@ -1,11 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
 export class CreateInterviewDTO {
+  @Expose()
   @ApiProperty()
   interviewerId: bigint;
 
+  @Expose()
   @ApiProperty()
   reviewerId: bigint;
 

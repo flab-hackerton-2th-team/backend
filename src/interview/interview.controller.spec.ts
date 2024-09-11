@@ -13,6 +13,7 @@ import { plainToInstance } from 'class-transformer';
 import { CreateInterviewDTO } from './dto/createInterview.dto';
 import { InterviewContents } from '../entities/interviewContents';
 import { CreateInterviewContentDTO } from './dto/createInterviewContent.dto';
+import { InterviewDTO } from './dto/interview.dto';
 
 describe('InterviewController', () => {
   let controller: InterviewController;
@@ -71,15 +72,15 @@ describe('InterviewController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('interviewer 생성', async () => {
-    const createDTO = plainToInstance(CreateInterviewDTO, {
-      reviewerId: reviewerList[0].id,
-      interviewerId: interviewerList[0].id,
-    });
+  it('interview 생성', async () => {
+    const response = await controller.create(
+      CreateInterviewDTO.from({
+        reviewerId: reviewerList[0].id,
+        interviewerId: interviewerList[0].id,
+      }),
+    );
 
-    const response = await controller.create(createDTO);
-
-    expect(response).toBeInstanceOf(Interview);
+    expect(response).toBeInstanceOf(InterviewDTO);
     expect(response.interviewer.id).toBe(interviewerList[0].id);
     expect(response.reviewer.id).toBe(reviewerList[0].id);
   });
