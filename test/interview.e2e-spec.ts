@@ -75,4 +75,22 @@ describe('ReviewerController (e2e)', () => {
       );
     });
   });
+
+  describe('/interviewer (GET)', () => {
+    it('interview 조회에 성공한다.', async () => {
+      await request(app.getHttpServer())
+        .post('/interview')
+        .send({
+          interviewerId: interviewerList[0].id,
+          reviewerId: reviewerList[0].id,
+        })
+        .expect(201);
+
+      const response = await request(app.getHttpServer())
+        .get('/interview')
+        .expect(200);
+
+      expect(response.body.length).toEqual(1);
+    });
+  });
 });
