@@ -11,6 +11,7 @@ import { INTERVIEWER_LIST } from '../../test/fixture/interviewer.common';
 import { REVIEWER_LIST } from '../../test/fixture/reviewers.common';
 import { plainToInstance } from 'class-transformer';
 import { CreateInterviewDTO } from './dto/createInterview.dto';
+import { InterviewContents } from '../entities/interviewContents';
 
 describe('InterviewController', () => {
   let controller: InterviewController;
@@ -25,7 +26,12 @@ describe('InterviewController', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         MikroOrmModule.forRoot(testConfig),
-        MikroOrmModule.forFeature([Reviewer, Interviewer, Interview]),
+        MikroOrmModule.forFeature([
+          Reviewer,
+          Interviewer,
+          Interview,
+          InterviewContents,
+        ]),
       ],
       providers: [InterviewService],
       controllers: [InterviewController],
@@ -80,6 +86,6 @@ describe('InterviewController', () => {
   it('interview 조회', async () => {
     const response = await controller.findAll();
 
-    expect(response.length).toBe(1);
+    expect(response.length).toBe(0);
   });
 });

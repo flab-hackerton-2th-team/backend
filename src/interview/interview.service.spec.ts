@@ -10,6 +10,7 @@ import { Interviewer } from '../entities/interviewer';
 import { REVIEWER_LIST } from '../../test/fixture/reviewers.common';
 import { INTERVIEWER_LIST } from '../../test/fixture/interviewer.common';
 import { CreateInterviewDTO } from './dto/createInterview.dto';
+import { InterviewContents } from '../entities/interviewContents';
 
 describe('InterviewService', () => {
   let service: InterviewService;
@@ -24,7 +25,12 @@ describe('InterviewService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         MikroOrmModule.forRoot(testConfig),
-        MikroOrmModule.forFeature([Reviewer, Interviewer, Interview]),
+        MikroOrmModule.forFeature([
+          Reviewer,
+          Interviewer,
+          Interview,
+          InterviewContents,
+        ]),
       ],
       providers: [InterviewService],
     }).compile();
@@ -99,7 +105,7 @@ describe('InterviewService', () => {
     });
   });
 
-  describe('interview 조회', () => {
+  describe('interview findAll', () => {
     it('0개일 경우 빈 array 조회', async () => {
       const response = await service.findAll();
 
@@ -107,12 +113,7 @@ describe('InterviewService', () => {
     });
 
     it('1개일 경우 조회 가능', async () => {
-      const interview = await service.create(
-        CreateInterviewDTO.from({
-          reviewerId: reviewerList[0].id,
-          interviewerId: interviewerList[0].id,
-        }),
-      );
+      const interview = await createInterview();
 
       const response = await service.findAll();
 
@@ -122,13 +123,8 @@ describe('InterviewService', () => {
 
     it('interviewer에 관계없이 전체가 조회된다.', async () => {
       await Promise.all([
-        service.create(
-          CreateInterviewDTO.from({
-            reviewerId: reviewerList[0].id,
-            interviewerId: interviewerList[0].id,
-          }),
-        ),
-        service.create(
+        createInterview(),
+        createInterview(
           CreateInterviewDTO.from({
             reviewerId: reviewerList[0].id,
             interviewerId: interviewerList[1].id,
@@ -141,4 +137,26 @@ describe('InterviewService', () => {
       expect(response.length).toBe(2);
     });
   });
+
+  describe('interview findOne', () => {
+    it('interview 관련된 contents 포함해서 조회', async () => {
+      const interview = await createInterview();
+
+      const response = await service.findOne(interview.id);
+
+      expect(response.id).toBe(interview.id);
+      expect(response.contents).toBeInstanceOf(Array);
+      expect(response.contents.length).toBe(0);
+    });
+  });
+
+  function createInterview(dto?: CreateInterviewDTO) {
+    return service.create(
+      dto ??
+        CreateInterviewDTO.from({
+          reviewerId: reviewerList[0].id,
+          interviewerId: interviewerList[0].id,
+        }),
+    );
+  }
 });

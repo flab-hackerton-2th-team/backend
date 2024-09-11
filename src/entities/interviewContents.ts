@@ -1,5 +1,5 @@
 import { Entity, Property, ManyToOne, PrimaryKey } from '@mikro-orm/core';
-import { Interviewer } from './interviewer';
+import { Interview } from './interview';
 
 @Entity()
 export class InterviewContents {
@@ -12,6 +12,6 @@ export class InterviewContents {
   @Property({ length: 20 })
   speaker: string;
 
-  @ManyToOne()
-  interview: Interviewer;
+  @ManyToOne({ entity: () => Interview })
+  interview: Interview;
 }

@@ -32,4 +32,5 @@ export const testConfig = sqliteConfig({
   ...config,
   allowGlobalContext: true,
   dbName: ':memory:',
+  debug: false,
 } as unknown as MikroOrmModuleOptions<SqliteDriver>);
