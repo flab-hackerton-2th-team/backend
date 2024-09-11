@@ -2,11 +2,17 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { InterviewService } from './interview.service';
 import { CreateInterviewDTO } from './dto/createInterview.dto';
 import { CreateInterviewContentDTO } from './dto/createInterviewContent.dto';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { InterviewDTO } from './dto/interview.dto';
 
+@ApiTags('interview')
 @Controller('interview')
 export class InterviewController {
   constructor(private readonly interviewService: InterviewService) {}
 
+  @ApiResponse({
+    type: InterviewDTO,
+  })
   @Post()
   create(@Body() createDTO: CreateInterviewDTO) {
     return this.interviewService.create(createDTO);

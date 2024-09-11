@@ -9,6 +9,7 @@ import { InterviewDetailDTO } from './dto/interviewDetail.dto ';
 import { CreateInterviewContentDTO } from './dto/createInterviewContent.dto';
 import { InterviewContents } from '../entities/interviewContents';
 import { InterviewContentDTO } from './dto/interviewContent.dto';
+import { InterviewDTO } from './dto/interview.dto';
 
 @Injectable()
 export class InterviewService {
@@ -44,7 +45,7 @@ export class InterviewService {
       .getEntityManager()
       .persistAndFlush(newEntity);
 
-    return newEntity;
+    return InterviewDTO.fromEntity(newEntity);
   }
 
   async createContents(interviewId: bigint, dto: CreateInterviewContentDTO) {
