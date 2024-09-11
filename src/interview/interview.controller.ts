@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { InterviewService } from './interview.service';
 import { CreateInterviewDTO } from './dto/createInterview.dto';
 import { CreateInterviewContentDTO } from './dto/createInterviewContent.dto';
@@ -12,7 +12,11 @@ export class InterviewController {
     return this.interviewService.create(createDTO);
   }
 
-  createContent(interviewId: bigint, dto: CreateInterviewContentDTO) {
+  @Post('/:id/contents')
+  createContent(
+    @Param('id') interviewId: bigint,
+    @Body() dto: CreateInterviewContentDTO,
+  ) {
     return this.interviewService.createContents(interviewId, dto);
   }
 

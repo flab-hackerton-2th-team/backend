@@ -48,10 +48,12 @@ export class InterviewService {
   }
 
   async createContents(interviewId: bigint, dto: CreateInterviewContentDTO) {
+    const interview = await this.interviewRepository.findOneOrFail({
+      id: interviewId,
+    });
+
     const newEntity = this.interviewContentsRepository.create({
-      interview: {
-        id: interviewId,
-      },
+      interview,
       content: dto.content,
       speaker: 'user',
     });
