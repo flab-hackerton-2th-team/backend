@@ -8,7 +8,7 @@ import { Reviewer } from '../src/entities/reviewer';
 import { REVIEWER_LIST } from '../src/reviewers/test/reviewers.common';
 import { MikroORM } from '@mikro-orm/sqlite';
 
-describe('AuthController (e2e)', () => {
+describe('ReviewerController (e2e)', () => {
   let app: INestApplication;
   let orm: MikroORM;
   let reviewerRepository: EntityRepository<Reviewer>;
