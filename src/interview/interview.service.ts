@@ -29,8 +29,13 @@ export class InterviewService {
 
     return this.interviewRepository.create({
       title: 'test',
+      status: 'created',
       interviewer,
       reviewer,
     });
+  }
+
+  findAll() {
+    return this.interviewRepository.findAll();
   }
 }

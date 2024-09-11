@@ -37,7 +37,9 @@ describe('InterviewService', () => {
     interviewerRepository = module.get<EntityRepository<Interviewer>>(
       getRepositoryToken(Interviewer),
     );
+  });
 
+  beforeEach(async () => {
     await orm.getSchemaGenerator().dropSchema();
     await orm.getSchemaGenerator().createSchema();
 
@@ -60,7 +62,7 @@ describe('InterviewService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('interviewer 생성', () => {
+  describe('interview 생성', () => {
     it('정상 요청에 대해서 생성', async () => {
       const createDTO = plainToInstance(CreateInterviewDTO, {
         reviewerId: reviewerList[0].id,
@@ -85,7 +87,7 @@ describe('InterviewService', () => {
       );
     });
 
-    it('', async () => {
+    it('interviewerId가 유효하지 않으면 에러 발생', async () => {
       const createDTO = plainToInstance(CreateInterviewDTO, {
         reviewerId: reviewerList[0].id,
         interviewerId: null,
@@ -94,6 +96,43 @@ describe('InterviewService', () => {
       await expect(async () => await service.create(createDTO)).rejects.toThrow(
         NotFoundError,
       );
+    });
+  });
+
+  describe('interview 조회', () => {
+    it('1개일 경우 조회 가능', async () => {
+      const interview = await service.create(
+        CreateInterviewDTO.from({
+          reviewerId: reviewerList[0].id,
+          interviewerId: interviewerList[0].id,
+        }),
+      );
+
+      const response = await service.findAll();
+
+      expect(response.length).toBe(1);
+      expect(response.map((item) => item.id)).toContain(interview.id);
+    });
+
+    it('interviewer에 관계없이 전체가 조회된다.', async () => {
+      await Promise.all([
+        service.create(
+          CreateInterviewDTO.from({
+            reviewerId: reviewerList[0].id,
+            interviewerId: interviewerList[0].id,
+          }),
+        ),
+        service.create(
+          CreateInterviewDTO.from({
+            reviewerId: reviewerList[0].id,
+            interviewerId: interviewerList[1].id,
+          }),
+        ),
+      ]);
+
+      const response = await service.findAll();
+
+      expect(response.length).toBe(2);
     });
   });
 });
