@@ -154,17 +154,23 @@ describe('InterviewService', () => {
   describe('interview createContents', () => {
     it('interview 단일 contents생성', async () => {
       const interview = await createInterview();
-      const content = 'hello';
 
-      const response = await service.createContents(
-        interview.id,
-        plainToInstance(CreateInterviewContentDTO, {
-          content,
-        }),
-      );
+      const response = await createInterviewContent(interview.id);
 
       expect(response.id).toBeDefined();
       expect(response.content.length).toBeGreaterThan(0);
+    });
+
+    it('interview get 요청시 contents list 응답', async () => {
+      const interview = await createInterview();
+
+      await Promise.all(
+        Array(2).map(() => createInterviewContent(interview.id)),
+      );
+
+      const response = await service.findContents(interview.id);
+
+      expect(response.length).toBe(2);
     });
   });
 
@@ -175,6 +181,15 @@ describe('InterviewService', () => {
           reviewerId: reviewerList[0].id,
           interviewerId: interviewerList[0].id,
         }),
+    );
+  }
+
+  function createInterviewContent(interviewId: bigint) {
+    return service.createContents(
+      interviewId,
+      plainToInstance(CreateInterviewContentDTO, {
+        content: 'hello',
+      }),
     );
   }
 });

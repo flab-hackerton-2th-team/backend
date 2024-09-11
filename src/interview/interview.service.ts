@@ -11,6 +11,9 @@ import { InterviewContents } from '../entities/interviewContents';
 
 @Injectable()
 export class InterviewService {
+  findContents(id: bigint) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     @InjectRepository(Interview)
     private readonly interviewRepository: EntityRepository<Interview>,
