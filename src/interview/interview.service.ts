@@ -5,6 +5,7 @@ import { Interview } from '../entities/interview';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Interviewer } from '../entities/interviewer';
 import { Reviewer } from '../entities/reviewer';
+import { InterviewDetailDTO } from './dto/interviewDetail.dto ';
 
 @Injectable()
 export class InterviewService {
@@ -45,7 +46,14 @@ export class InterviewService {
     return this.interviewRepository.findAll();
   }
 
-  findOne(id: bigint) {
-    throw new Error('Method not implemented.');
+  async findOne(id: bigint) {
+    const interview = await this.interviewRepository.findOne(
+      { id },
+      {
+        populate: ['contents'],
+      },
+    );
+
+    return InterviewDetailDTO.fromEntity(interview);
   }
 }

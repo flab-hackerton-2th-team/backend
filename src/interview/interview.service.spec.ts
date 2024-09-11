@@ -10,6 +10,7 @@ import { Interviewer } from '../entities/interviewer';
 import { REVIEWER_LIST } from '../../test/fixture/reviewers.common';
 import { INTERVIEWER_LIST } from '../../test/fixture/interviewer.common';
 import { CreateInterviewDTO } from './dto/createInterview.dto';
+import { InterviewContents } from '../entities/interviewContents';
 
 describe('InterviewService', () => {
   let service: InterviewService;
@@ -24,7 +25,12 @@ describe('InterviewService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         MikroOrmModule.forRoot(testConfig),
-        MikroOrmModule.forFeature([Reviewer, Interviewer, Interview]),
+        MikroOrmModule.forFeature([
+          Reviewer,
+          Interviewer,
+          Interview,
+          InterviewContents,
+        ]),
       ],
       providers: [InterviewService],
     }).compile();
