@@ -8,12 +8,10 @@ import { Reviewer } from '../entities/reviewer';
 import { InterviewDetailDTO } from './dto/interviewDetail.dto ';
 import { CreateInterviewContentDTO } from './dto/createInterviewContent.dto';
 import { InterviewContents } from '../entities/interviewContents';
+import { InterviewContentDTO } from './dto/interviewContent.dto';
 
 @Injectable()
 export class InterviewService {
-  findContents(id: bigint) {
-    throw new Error('Method not implemented.');
-  }
   constructor(
     @InjectRepository(Interview)
     private readonly interviewRepository: EntityRepository<Interview>,
@@ -86,9 +84,20 @@ export class InterviewService {
     return InterviewDetailDTO.fromEntity(interview);
   }
 
+  async findContents(interviewId: bigint) {
+    const interviewList = await this.interviewContentsRepository.findAll({
+      where: {
+        interview: { id: interviewId },
+      },
+    });
+
+    return interviewList.map(InterviewContentDTO.fromEntity);
+  }
+
   private async getResponseByAI(interviewId: bigint) {
     const answerCount = await this.interviewContentsRepository.count({
       interview: { id: interviewId },
+      speaker: 'user',
     });
 
     if (answerCount > 10) {

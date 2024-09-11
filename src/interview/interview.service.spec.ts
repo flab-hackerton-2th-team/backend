@@ -165,12 +165,14 @@ describe('InterviewService', () => {
       const interview = await createInterview();
 
       await Promise.all(
-        Array(2).map(() => createInterviewContent(interview.id)),
+        Array.from({ length: 2 }).map(() =>
+          createInterviewContent(interview.id),
+        ),
       );
 
       const response = await service.findContents(interview.id);
 
-      expect(response.length).toBe(2);
+      expect(response.length).toBe(4);
     });
   });
 
