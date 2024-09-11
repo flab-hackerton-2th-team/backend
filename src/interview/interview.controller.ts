@@ -10,4 +10,8 @@ export class InterviewController {
   create(@Body() createDTO: CreateInterviewDTO) {
     return this.interviewService.create(createDTO);
   }
+
+  findAll() {
+    return this.interviewService.findAll();
+  }
 }
