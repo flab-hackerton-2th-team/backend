@@ -113,12 +113,7 @@ describe('InterviewService', () => {
     });
 
     it('1개일 경우 조회 가능', async () => {
-      const interview = await service.create(
-        CreateInterviewDTO.from({
-          reviewerId: reviewerList[0].id,
-          interviewerId: interviewerList[0].id,
-        }),
-      );
+      const interview = await createInterview();
 
       const response = await service.findAll();
 
@@ -128,13 +123,8 @@ describe('InterviewService', () => {
 
     it('interviewer에 관계없이 전체가 조회된다.', async () => {
       await Promise.all([
-        service.create(
-          CreateInterviewDTO.from({
-            reviewerId: reviewerList[0].id,
-            interviewerId: interviewerList[0].id,
-          }),
-        ),
-        service.create(
+        createInterview(),
+        createInterview(
           CreateInterviewDTO.from({
             reviewerId: reviewerList[0].id,
             interviewerId: interviewerList[1].id,
@@ -150,12 +140,7 @@ describe('InterviewService', () => {
 
   describe('interview findOne', () => {
     it('interview 관련된 contents 포함해서 조회', async () => {
-      const interview = await service.create(
-        CreateInterviewDTO.from({
-          reviewerId: reviewerList[0].id,
-          interviewerId: interviewerList[0].id,
-        }),
-      );
+      const interview = await createInterview();
 
       const response = await service.findOne(interview.id);
 
@@ -164,4 +149,14 @@ describe('InterviewService', () => {
       expect(response.contents.length).toBe(0);
     });
   });
+
+  function createInterview(dto?: CreateInterviewDTO) {
+    return service.create(
+      dto ??
+        CreateInterviewDTO.from({
+          reviewerId: reviewerList[0].id,
+          interviewerId: interviewerList[0].id,
+        }),
+    );
+  }
 });
