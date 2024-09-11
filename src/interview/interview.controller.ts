@@ -5,9 +5,6 @@ import { CreateInterviewContentDTO } from './dto/createInterviewContent.dto';
 
 @Controller('interview')
 export class InterviewController {
-  createContent(id: bigint, arg1: CreateInterviewContentDTO) {
-    throw new Error('Method not implemented.');
-  }
   constructor(private readonly interviewService: InterviewService) {}
 
   @Post()
@@ -15,12 +12,16 @@ export class InterviewController {
     return this.interviewService.create(createDTO);
   }
 
+  createContent(interviewId: bigint, dto: CreateInterviewContentDTO) {
+    return this.interviewService.createContents(interviewId, dto);
+  }
+
   @Get()
   findAll() {
     return this.interviewService.findAll();
   }
 
-  findContents(arg0: any) {
-    throw new Error('Method not implemented.');
+  findContents(interviewId: bigint) {
+    return this.interviewService.findContents(interviewId);
   }
 }
