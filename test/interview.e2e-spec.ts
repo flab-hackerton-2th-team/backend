@@ -11,6 +11,8 @@ import { Interviewer } from '../src/entities/interviewer';
 import { INTERVIEWER_LIST } from './fixture/interviewer.common';
 import { InterviewFixture } from './fixture/interview.common';
 import { CreateInterviewDTO } from '../src/interview/dto/createInterview.dto';
+import { plainToInstance } from 'class-transformer';
+import { CreateInterviewContentDTO } from '../src/interview/dto/createInterviewContent.dto';
 
 describe('ReviewerController (e2e)', () => {
   let app: INestApplication;
@@ -65,8 +67,8 @@ describe('ReviewerController (e2e)', () => {
     interviewerList = await interviewerRepository.findAll();
   });
 
-  describe('/interviewer (POST)', () => {
-    it('interview 생성에 성공한다.', async () => {
+  describe('/interview', () => {
+    it('POST: interview 생성에 성공한다.', async () => {
       const response = await interviewFixture.create(
         CreateInterviewDTO.from({
           interviewerId: interviewerList[0].id,
@@ -79,10 +81,8 @@ describe('ReviewerController (e2e)', () => {
         interviewerList[0].id.toString(),
       );
     });
-  });
 
-  describe('/interviewer (GET)', () => {
-    it('interview 조회에 성공한다.', async () => {
+    it('GET: interview 조회에 성공한다.', async () => {
       await interviewFixture.create(
         CreateInterviewDTO.from({
           interviewerId: interviewerList[0].id,
@@ -93,6 +93,28 @@ describe('ReviewerController (e2e)', () => {
       const response = await interviewFixture.getAll();
 
       expect(response.body.length).toEqual(1);
+    });
+  });
+
+  describe('/interview/:id/contents', () => {
+    it('POST: interviewContents 생성에 성공한다.', async () => {
+      const interview = await interviewFixture.create(
+        CreateInterviewDTO.from({
+          interviewerId: interviewerList[0].id,
+          reviewerId: reviewerList[0].id,
+        }),
+      );
+
+      const content = 'hello';
+      const response = await interviewFixture.createContents(
+        interview.body.id,
+        plainToInstance(CreateInterviewContentDTO, {
+          content,
+        }),
+      );
+
+      expect(response.status).toBe(201);
+      expect(response.body.content).not.toEqual(content);
     });
   });
 });

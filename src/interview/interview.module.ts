@@ -5,7 +5,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Interview } from '../entities/interview';
 import { Reviewer } from '../entities/reviewer';
 import { Interviewer } from '../entities/interviewer';
-import { InterviewContents } from 'src/entities/interviewContents';
+import { InterviewContents } from '../entities/interviewContents';
 
 @Module({
   imports: [
