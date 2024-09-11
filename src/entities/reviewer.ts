@@ -6,5 +6,5 @@ export class Reviewer {
   id: bigint;
 
   @Property({ type: 'jsonb' })
-  presona: any;
+  persona: any;
 }
