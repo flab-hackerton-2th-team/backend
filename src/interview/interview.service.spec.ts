@@ -11,6 +11,7 @@ import { REVIEWER_LIST } from '../../test/fixture/reviewers.common';
 import { INTERVIEWER_LIST } from '../../test/fixture/interviewer.common';
 import { CreateInterviewDTO } from './dto/createInterview.dto';
 import { InterviewContents } from '../entities/interviewContents';
+import { CreateInterviewContentDTO } from './dto/createInterviewContent.dto';
 
 describe('InterviewService', () => {
   let service: InterviewService;
@@ -150,6 +151,31 @@ describe('InterviewService', () => {
     });
   });
 
+  describe('interview createContents', () => {
+    it('interview 단일 contents생성', async () => {
+      const interview = await createInterview();
+
+      const response = await createInterviewContent(interview.id);
+
+      expect(response.id).toBeDefined();
+      expect(response.content.length).toBeGreaterThan(0);
+    });
+
+    it('interview get 요청시 contents list 응답', async () => {
+      const interview = await createInterview();
+
+      await Promise.all(
+        Array.from({ length: 2 }).map(() =>
+          createInterviewContent(interview.id),
+        ),
+      );
+
+      const response = await service.findContents(interview.id);
+
+      expect(response.length).toBe(4);
+    });
+  });
+
   function createInterview(dto?: CreateInterviewDTO) {
     return service.create(
       dto ??
@@ -157,6 +183,15 @@ describe('InterviewService', () => {
           reviewerId: reviewerList[0].id,
           interviewerId: interviewerList[0].id,
         }),
+    );
+  }
+
+  function createInterviewContent(interviewId: bigint) {
+    return service.createContents(
+      interviewId,
+      plainToInstance(CreateInterviewContentDTO, {
+        content: 'hello',
+      }),
     );
   }
 });
