@@ -5,6 +5,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AuthModule } from './auth/auth.module';
 import mikroOrmConfig, { testConfig } from './mikro-orm.config';
 import { ReviewersModule } from './reviewers/reviewers.module';
+import { InterviewModule } from './interview/interview.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ReviewersModule } from './reviewers/reviewers.module';
     ),
     AuthModule,
     ReviewersModule,
+    InterviewModule,
   ],
   controllers: [AppController],
   providers: [AppService],
