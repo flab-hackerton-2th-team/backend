@@ -5,6 +5,8 @@ import { EntityRepository, MikroORM } from '@mikro-orm/core';
 import { MikroOrmModule, getRepositoryToken } from '@mikro-orm/nestjs';
 import { Reviewer } from '../entities/reviewer';
 import { testConfig } from '../mikro-orm.config';
+import { Interview } from '../entities/interview';
+import { Interviewer } from '../entities/interviewer';
 
 describe('InterviewController', () => {
   let controller: InterviewController;
@@ -15,7 +17,7 @@ describe('InterviewController', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         MikroOrmModule.forRoot(testConfig),
-        MikroOrmModule.forFeature([Reviewer]),
+        MikroOrmModule.forFeature([Reviewer, Interviewer, Interview]),
       ],
       providers: [InterviewService],
       controllers: [InterviewController],

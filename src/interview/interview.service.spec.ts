@@ -24,7 +24,7 @@ describe('InterviewService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         MikroOrmModule.forRoot(testConfig),
-        MikroOrmModule.forFeature([Reviewer, Interviewer]),
+        MikroOrmModule.forFeature([Reviewer, Interviewer, Interview]),
       ],
       providers: [InterviewService],
     }).compile();
@@ -43,15 +43,19 @@ describe('InterviewService', () => {
     await orm.getSchemaGenerator().dropSchema();
     await orm.getSchemaGenerator().createSchema();
 
-    reviewerList = await Promise.all(
+    await Promise.all(
       REVIEWER_LIST.map((reviewer) => reviewerRepository.create(reviewer)),
     );
 
-    interviewerList = await Promise.all(
+    await Promise.all(
       INTERVIEWER_LIST.map((interviewer) =>
         interviewerRepository.create(interviewer),
       ),
     );
+
+    await orm.em.flush();
+    reviewerList = await reviewerRepository.findAll();
+    interviewerList = await interviewerRepository.findAll();
   });
 
   it('should be defined', () => {
@@ -60,13 +64,14 @@ describe('InterviewService', () => {
 
   it('interviewer 생성', async () => {
     const createDTO = plainToInstance(CreateInterviewDTO, {
-      reviwerId: reviewerList[0].id,
+      reviewerId: reviewerList[0].id,
       interviewerId: interviewerList[0].id,
     });
+
     const response = await service.create(createDTO);
 
     expect(response).toBeInstanceOf(Interview);
-    expect(response.interviewerId).toBe(interviewerList[0].id);
-    expect(response.reviewerId).toBe(reviewerList[0].id);
+    expect(response.interviewer.id).toBe(interviewerList[0].id);
+    expect(response.reviewer.id).toBe(reviewerList[0].id);
   });
 });
