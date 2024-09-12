@@ -48,7 +48,7 @@ describe('ReviwersController', () => {
       const result = await controller.getAll();
 
       expect(result.length).toEqual(2);
-      expect(result[0].presona.name).toEqual('John Doe');
+      expect(result[0].persona.name).toEqual('John Doe');
     });
   });
 });
