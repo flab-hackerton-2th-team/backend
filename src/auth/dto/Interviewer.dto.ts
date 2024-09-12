@@ -6,10 +6,16 @@ import { Interviewer } from 'src/entities/interviewer';
 export class InterviewerDTO {
   @Expose()
   @ApiProperty()
+  id: bigint;
+
+  @Expose()
+  @ApiProperty()
   name: string;
 
   static fromEntity(entity: Interviewer): InterviewerDTO {
     const interviewerDTO = new InterviewerDTO();
+
+    interviewerDTO.id = entity.id;
     interviewerDTO.name = entity.name;
 
     return interviewerDTO;

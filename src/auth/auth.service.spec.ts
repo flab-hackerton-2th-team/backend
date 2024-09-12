@@ -6,11 +6,13 @@ import { CreateInterviewerDTO } from './dto/createInterviewer.dto';
 import { plainToInstance } from 'class-transformer';
 import { testConfig } from '../mikro-orm.config';
 import { InterviewerDTO } from './dto/Interviewer.dto';
+import { MikroORM } from '@mikro-orm/sqlite';
 
 describe('AuthService', () => {
   let service: AuthService;
+  let orm: MikroORM;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         MikroOrmModule.forRoot(testConfig),
@@ -20,6 +22,12 @@ describe('AuthService', () => {
     }).compile();
 
     service = module.get<AuthService>(AuthService);
+    orm = module.get(MikroORM);
+  });
+
+  beforeEach(async () => {
+    await orm.getSchemaGenerator().dropSchema();
+    await orm.getSchemaGenerator().createSchema();
   });
 
   it('should be defined', () => {

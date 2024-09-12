@@ -2,11 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
-import { EntityRepository } from '@mikro-orm/core';
+import { EntityRepository, MikroORM } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { Reviewer } from '../src/entities/reviewer';
 import { REVIEWER_LIST } from './fixture/reviewers.common';
-import { MikroORM } from '@mikro-orm/sqlite';
 
 describe('ReviewerController (e2e)', () => {
   let app: INestApplication;
@@ -19,6 +18,11 @@ describe('ReviewerController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    orm = moduleFixture.get(MikroORM);
+    reviewerRepository = moduleFixture.get<EntityRepository<Reviewer>>(
+      getRepositoryToken(Reviewer),
+    );
+
     app.useGlobalPipes(
       new ValidationPipe({
         transform: true,
@@ -26,11 +30,6 @@ describe('ReviewerController (e2e)', () => {
     );
 
     await app.init();
-
-    orm = moduleFixture.get(MikroORM);
-    reviewerRepository = moduleFixture.get<EntityRepository<Reviewer>>(
-      getRepositoryToken(Reviewer),
-    );
 
     await orm.getSchemaGenerator().dropSchema();
     await orm.getSchemaGenerator().createSchema();
